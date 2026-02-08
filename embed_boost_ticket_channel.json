@@ -1,0 +1,92 @@
+{
+  "type": "boost_ticket_channel",
+  "description": "Сообщение в канале буст-тикета с данными о заказе бустов",
+  "containers": [
+    {
+      "name": "container1",
+      "description": "Информация о заказчике",
+      "components": [
+        {
+          "type": "media_gallery",
+          "items": [
+            {
+              "url": "{{user.avatarURL}}"
+            }
+          ]
+        },
+        {
+          "type": "separator",
+          "divider": true,
+          "spacing": 1
+        },
+        {
+          "type": "text_display",
+          "content": "## [<:image1:1462898121511014490>] <@&1462729072009412653>, поступил новый заказ от <@{{user.id}}>\n- **Данные заказчика:** {{user.username}}, {{user.id}}"
+        },
+        {
+          "type": "media_gallery",
+          "items": [
+            {
+              "url": "https://images-ext-1.discordapp.net/external/bX-SiBhIqKQg18GjUdEqCZ5XiuL3Y1gbaxvtQYIBbAo/%3Fformat%3Dwebp%26quality%3Dlossless/https/images-ext-1.discordapp.net/external/4S2HiGT71peX9f0gCSExCIoqqLFC_ft5QLnNFFKB2Zc/%253Fformat%253Dwebp%2526quality%253Dlossless%2526width%253D1241%2526height%253D38/https/images-ext-1.discordapp.net/external/R18586EeJABrCAaCW2mZcVBj2pWz7XLexgi1RkpjN_E/%25253Fformat%25253Dwebp%252526quality%25253Dlossless%252526width%25253D1393%252526height%25253D43/https/images-ext-1.discordapp.net/external/XHxQo2vBEGWHpf3oNBV8kSLA2TxzMnwan6MH8XL25es/https/i.imgur.com/LYYfDwK.png?format=webp&quality=lossless&width=1867&height=58"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "container2",
+      "description": "Детали заказа бустов",
+      "components": [
+        {
+          "type": "text_display",
+          "content": "### <:Frame6559:1463970472231178383> Тема заказа:\n* Заказ бустов"
+        },
+        {
+          "type": "separator",
+          "divider": true,
+          "spacing": 1
+        },
+        {
+          "type": "text_display",
+          "content": "### <:Frame6559:1463970472231178383> Количество бустов:\n* {{boostCount}}"
+        },
+        {
+          "type": "separator",
+          "divider": true,
+          "spacing": 1
+        },
+        {
+          "type": "text_display",
+          "content": "### <:Frame6559:1463970472231178383> Ссылка на сервер:\n* {{serverLink}}"
+        },
+        {
+          "type": "separator",
+          "divider": true,
+          "spacing": 1
+        },
+        {
+          "type": "media_gallery",
+          "items": [
+            {
+              "url": "https://images-ext-1.discordapp.net/external/bX-SiBhIqKQg18GjUdEqCZ5XiuL3Y1gbaxvtQYIBbAo/%3Fformat%3Dwebp%26quality%3Dlossless/https/images-ext-1.discordapp.net/external/4S2HiGT71peX9f0gCSExCIoqqLFC_ft5QLnNFFKB2Zc/%253Fformat%253Dwebp%2526quality%253Dlossless%2526width%253D1241%2526height%253D38/https/images-ext-1.discordapp.net/external/R18586EeJABrCAaCW2mZcVBj2pWz7XLexgi1RkpjN_E/%25253Fformat%25253Dwebp%252526quality%25253Dlossless%252526width%25253D1393%252526height%25253D43/https/images-ext-1.discordapp.net/external/XHxQo2vBEGWHpf3oNBV8kSLA2TxzMnwan6MH8XL25es/https/i.imgur.com/LYYfDwK.png?format=webp&quality=lossless&width=1867&height=58"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "buttons": [
+    {
+      "customId": "close_boost_simple",
+      "label": "Закрыть",
+      "style": "Secondary",
+      "emoji": "🔒"
+    },
+    {
+      "customId": "close_boost_reason",
+      "label": "Закрыть с причиной",
+      "style": "Danger",
+      "emoji": "📝"
+    }
+  ]
+}

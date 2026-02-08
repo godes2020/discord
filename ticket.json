@@ -1,0 +1,76 @@
+{
+  "content": "",
+  "tts": false,
+  "embeds": [],
+  "components": [
+    {
+      "id": 244656733,
+      "type": 17,
+      "components": [
+        {
+          "id": 249198732,
+          "type": 12,
+          "items": [
+            {
+              "id": 368630815,
+              "media": {
+                "url": "https://media.discordapp.net/attachments/1462804318611836928/1464225475952906414/Frame_6560.png?ex=6974b1bd&is=6973603d&hm=5932d8ab9c5a4e6d128625a41448e0e1b5912abc5ba3298124f3801f8d2644aa&=&format=webp&quality=lossless&width=1867&height=741"
+              }
+            }
+          ]
+        },
+        {
+          "id": 849240139,
+          "type": 14,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "id": 589842854,
+          "type": 10,
+          "content": "## <:Frame_6552:1464225922235367559> ・Создать заказ\nСоздать заявку на выполнение заказа нашей студией можно ниже!\n* `Примечание:` Не забудьте указать все в подробностях, чтобы наши исполнители все поняли.\n"
+        },
+        {
+          "id": 633613909,
+          "type": 14,
+          "spacing": 2,
+          "divider": true
+        },
+        {
+          "id": 577842513,
+          "type": 9,
+          "components": [
+            {
+              "id": 635599707,
+              "type": 10,
+              "content": "Нажми кнопку справа →"
+            }
+          ],
+          "accessory": {
+            "id": 182684904,
+            "type": 2,
+            "media": {
+              "url": ""
+            },
+            "label": "Создать заказ",
+            "style": 2,
+            "action_set_id": "828242416",
+            "emoji": {
+              "id": "1462806359060906152",
+              "name": "6011exclamationviolett",
+              "animated": true
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "actions": {
+    "828242416": {
+      "actions": []
+    }
+  },
+  "flags": 32768,
+  "username": "ORJUS STUDIO",
+  "avatar_url": "https://cdn.discordapp.com/attachments/1462804318611836928/1462909582471991348/image_62.png?ex=696fe838&is=696e96b8&hm=46b385a78d0861f1ebf5da382671a175d16b4753b8881370a7b8c9efdcd8d06a&"
+}

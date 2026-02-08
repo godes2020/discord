@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Embed Editor - ORJUS</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #313338;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background: #2b2d31;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.24);
+            padding: 40px;
+            border: 1px solid #1e1f22;
+        }
+        .login-container h1 {
+            text-align: center;
+            color: #5865f2;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #b5bac1;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #1e1f22;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #383a40;
+            color: #dbdee1;
+        }
+        .form-group textarea {
+            min-height: 300px;
+            resize: vertical;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+        }
+        .btn {
+            background: #5865f2;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+        .btn:hover { background: #4752c4; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .error { color: #e74c3c; text-align: center; margin-top: 10px; }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: #2b2d31;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.24);
+            overflow: hidden;
+            display: none;
+        }
+        .container.active { display: block; }
+        .header {
+            background: #1e1f22;
+            color: white;
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #0a0a0a;
+        }
+        .header h1 { font-size: 2em; }
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 30px;
+        }
+        .top-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .section {
+            background: #313338;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #1e1f22;
+        }
+        .section h2 {
+            color: #dbdee1;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .templates-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        .template-item {
+            padding: 15px;
+            background: #2b2d31;
+            border: 1px solid #1e1f22;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #dbdee1;
+        }
+        .template-item:hover {
+            background: #404249;
+        }
+        .template-item.selected {
+            background: #404249;
+            border-color: #5865f2;
+        }
+        .template-actions {
+            display: flex;
+            gap: 5px;
+        }
+        .template-actions button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+        .status {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        .status.success {
+            background: #1a3d2e;
+            color: #4ade80;
+            border: 2px solid #22c55e;
+            display: block;
+        }
+        .status.error {
+            background: #3d1a1a;
+            color: #f87171;
+            border: 2px solid #e74c3c;
+            display: block;
+        }
+        .sidebar-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: #5865f2;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .sidebar-toggle:hover {
+            background: #4752c4;
+        }
+        .sidebar {
+            position: fixed;
+            left: -350px;
+            top: 0;
+            width: 350px;
+            height: 100vh;
+            background: #2b2d31;
+            border-right: 1px solid #1e1f22;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.24);
+            z-index: 1000;
+            transition: left 0.3s;
+            overflow-y: auto;
+            padding: 80px 20px 20px 20px;
+        }
+        .sidebar.active {
+            left: 0;
+        }
+        .sidebar-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .sidebar-tab {
+            flex: 1;
+            padding: 12px;
+            background: #313338;
+            border: 1px solid #1e1f22;
+            border-radius: 8px;
+            color: #b5bac1;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+        .sidebar-tab:hover {
+            background: #404249;
+            color: #dbdee1;
+        }
+        .sidebar-tab.active {
+            background: #5865f2;
+            border-color: #5865f2;
+            color: white;
+        }
+        .sidebar-content {
+            display: none;
+        }
+        .sidebar-content.active {
+            display: block;
+        }
+        .transcript-list {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+        .transcript-item {
+            padding: 15px;
+            background: #313338;
+            border: 1px solid #1e1f22;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #dbdee1;
+        }
+        .transcript-item:hover {
+            background: #404249;
+        }
+        .transcript-item .name {
+            font-weight: 600;
+            color: #dbdee1;
+            margin-bottom: 5px;
+        }
+        .transcript-item .date {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+        .transcript-viewer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            background: #2b2d31;
+            border: 1px solid #1e1f22;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.24);
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+        }
+        .transcript-viewer.active {
+            display: flex;
+        }
+        .transcript-viewer-header {
+            padding: 20px;
+            border-bottom: 1px solid #1e1f22;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #313338;
+        }
+        .transcript-viewer-header h3 {
+            color: #dbdee1;
+        }
+        .transcript-viewer-close {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .transcript-viewer-content {
+            padding: 20px;
+            overflow-y: auto;
+            color: #dbdee1;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+        }
+        .overlay.active {
+            display: block;
+        }
+        .preview-section {
+            background: #313338;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #1e1f22;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .preview-section h2 {
+            color: #dbdee1;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .discord-message {
+            display: flex;
+            gap: 15px;
+            padding: 10px;
+            background: #2b2d31;
+            border-radius: 8px;
+        }
+        .discord-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #5865f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .discord-content {
+            flex: 1;
+        }
+        .discord-username {
+            color: #dbdee1;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+        .discord-embed {
+            border-left: 4px solid #5865f2;
+            background: #2b2d31;
+            border-radius: 4px;
+            padding: 12px 16px;
+            max-width: 520px;
+        }
+        .discord-embed-author {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .discord-embed-author-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+        .discord-embed-author-name {
+            color: #dbdee1;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .discord-embed-title {
+            color: #00aff4;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .discord-embed-description {
+            color: #dbdee1;
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            white-space: pre-wrap;
+        }
+        .discord-embed-fields {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .discord-embed-field {
+            color: #dbdee1;
+        }
+        .discord-embed-field-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        .discord-embed-field-value {
+            font-size: 14px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+        }
+        .discord-embed-field.inline {
+            display: inline-block;
+            width: calc(33.333% - 6px);
+            vertical-align: top;
+        }
+        .discord-embed-footer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            color: #b5bac1;
+            font-size: 12px;
+        }
+        .discord-embed-footer-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+        .discord-embed-image {
+            max-width: 100%;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+        .discord-embed-thumbnail {
+            float: right;
+            max-width: 80px;
+            max-height: 80px;
+            border-radius: 4px;
+            margin-left: 16px;
+        }
+        .code-editor-container {
+            background: #313338;
+            border-radius: 10px;
+            border: 1px solid #1e1f22;
+            overflow: hidden;
+            max-height: 60px;
+            transition: max-height 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .code-editor-container.expanded {
+            max-height: 600px;
+        }
+        .code-editor-header {
+            background: #2b2d31;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1e1f22;
+            flex-shrink: 0;
+        }
+        .code-editor-content {
+            padding: 0;
+            overflow-y: auto;
+            flex: 1;
+        }
+        .code-editor-header h2 {
+            color: #dbdee1;
+            font-size: 1.2em;
+            margin: 0;
+        }
+        .code-editor-toggle {
+            background: #2b2d31;
+            color: #dbdee1;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-right: 8px;
+            transition: background 0.2s;
+        }
+        .code-editor-toggle:hover {
+            background: #404249;
+        }
+        .code-editor-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .code-editor-btn {
+            background: #5865f2;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+        .code-editor-btn:hover {
+            background: #4752c4;
+        }
+        .code-editor-content textarea {
+            width: 100%;
+            min-height: 400px;
+            background: #1e1f22;
+            color: #dbdee1;
+            border: none;
+            border-radius: 0;
+            padding: 16px 12px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 14px;
+            resize: none;
+            line-height: 21px;
+            tab-size: 2;
+        }
+        .code-editor-wrapper {
+            position: relative;
+            background: #1e1f22;
+            border-radius: 4px;
+            border: 1px solid #0a0a0a;
+            display: flex;
+        }
+        .line-numbers {
+            background: #0a0a0a;
+            color: #6e7681;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 21px;
+            text-align: right;
+            user-select: none;
+            padding: 12px 10px;
+            border-right: 1px solid #2b2d31;
+            overflow: hidden;
+            min-width: 50px;
+            white-space: pre;
+        }
+        .code-editor-wrapper textarea {
+            border: none;
+            border-radius: 0;
+            flex: 1;
+        }
+        /* Стилизация скроллбара */
+        textarea::-webkit-scrollbar,
+        .transcript-list::-webkit-scrollbar,
+        .templates-list::-webkit-scrollbar,
+        .preview-section::-webkit-scrollbar,
+        .sidebar::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        textarea::-webkit-scrollbar-track,
+        .transcript-list::-webkit-scrollbar-track,
+        .templates-list::-webkit-scrollbar-track,
+        .preview-section::-webkit-scrollbar-track,
+        .sidebar::-webkit-scrollbar-track {
+            background: #0a0a0a;
+            border-radius: 10px;
+        }
+        textarea::-webkit-scrollbar-thumb,
+        .transcript-list::-webkit-scrollbar-thumb,
+        .templates-list::-webkit-scrollbar-thumb,
+        .preview-section::-webkit-scrollbar-thumb,
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #4e5058;
+            border-radius: 10px;
+            border: 2px solid #0a0a0a;
+        }
+        textarea::-webkit-scrollbar-thumb:hover,
+        .transcript-list::-webkit-scrollbar-thumb:hover,
+        .templates-list::-webkit-scrollbar-thumb:hover,
+        .preview-section::-webkit-scrollbar-thumb:hover,
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #5e6068;
+        }
+        /* Подсветка синтаксиса */
+        .syntax-highlight {
+            position: absolute;
+            left: 60px;
+            top: 12px;
+            right: 10px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 21px;
+            pointer-events: none;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: hidden;
+        }
+        .syntax-highlight .json-key { color: #9cdcfe; }
+        .syntax-highlight .json-string { color: #ce9178; }
+        .syntax-highlight .json-number { color: #b5cea8; }
+        .syntax-highlight .json-boolean { color: #569cd6; }
+        .syntax-highlight .json-null { color: #569cd6; }
+        .syntax-highlight .json-bracket { color: #da70d6; }
+        .syntax-highlight .json-comma { color: #dbdee1; }
+        .code-editor-wrapper textarea {
+            background: transparent;
+            position: relative;
+            z-index: 2;
+            color: transparent;
+            caret-color: #dbdee1;
+            -webkit-text-fill-color: transparent;
+        }
+        .code-editor-wrapper textarea::selection {
+            background: rgba(88, 101, 242, 0.5);
+            -webkit-text-fill-color: #dbdee1;
+        }
+        .fullscreen-editor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #313338;
+            z-index: 3000;
+            display: none;
+            flex-direction: column;
+        }
+        .fullscreen-editor.active {
+            display: flex;
+        }
+        .fullscreen-editor .code-editor-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .fullscreen-editor textarea {
+            min-height: calc(100vh - 100px) !important;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 15px;
+        }
+        @media (max-width: 1024px) {
+            .top-sections { grid-template-columns: 1fr; }
+            .sidebar { width: 300px; left: -300px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Оверлей для боковой панели -->
+    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+    <!-- Кнопка открытия меню -->
+    <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+
+    <!-- Боковая панель -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-tabs">
+            <div class="sidebar-tab active" onclick="switchTab('embeds')">Embeds</div>
+            <div class="sidebar-tab" onclick="switchTab('orders')">Orders</div>
+            <div class="sidebar-tab" onclick="switchTab('boosts')">Boosts</div>
+        </div>
+
+        <!-- Контент для Embeds -->
+        <div class="sidebar-content active" id="embeds-content">
+            <div id="sidebar-templates-list">
+                <p style="text-align: center; color: #9ca3af;">Загрузка...</p>
+            </div>
+        </div>
+
+        <!-- Контент для Orders -->
+        <div class="sidebar-content" id="orders-content">
+            <div class="transcript-list" id="orders-list">
+                <p style="text-align: center; color: #9ca3af;">Загрузка...</p>
+            </div>
+        </div>
+
+        <!-- Контент для Boosts -->
+        <div class="sidebar-content" id="boosts-content">
+            <div class="transcript-list" id="boosts-list">
+                <p style="text-align: center; color: #9ca3af;">Загрузка...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Просмотрщик транскриптов -->
+    <div class="transcript-viewer" id="transcript-viewer">
+        <div class="transcript-viewer-header">
+            <h3 id="transcript-title">Транскрипт</h3>
+            <button class="transcript-viewer-close" onclick="closeTranscriptViewer()">✕</button>
+        </div>
+        <div class="transcript-viewer-content" id="transcript-content">
+        </div>
+    </div>
+
+    <div class="login-container" id="login-form">
+        <h1>🔒 Вход</h1>
+        <div class="form-group">
+            <label for="pincode">Пинкод:</label>
+            <input type="password" id="pincode" placeholder="Введите пинкод">
+        </div>
+        <button class="btn" id="login-btn">Войти</button>
+        <div class="error" id="login-error"></div>
+    </div>
+
+    <div class="container" id="main-container">
+        <div class="header">
+            <div>
+                <h1>🎨 Discord Embed Editor</h1>
+                <p>Управление шаблонами и отправка эмбедов</p>
+            </div>
+            <div class="logout-btn" onclick="logout()">Выйти</div>
+        </div>
+
+        <div class="content">
+            <div class="top-sections">
+                <div class="section">
+                    <h2>📋 Шаблоны</h2>
+                    
+                    <div class="form-group">
+                        <label for="template-name">Название шаблона:</label>
+                        <input type="text" id="template-name" placeholder="Например: Приветствие">
+                    </div>
+
+                    <button class="btn" style="margin-bottom: 20px;" onclick="saveTemplate()">💾 Сохранить как шаблон</button>
+
+                    <div class="templates-list" id="templates-list">
+                        <p style="text-align: center; color: #999;">Загрузка...</p>
+                    </div>
+
+                    <h2 style="margin-top: 20px;">📤 Отправка</h2>
+                    
+                    <div class="form-group">
+                        <label for="guild-select">Сервер:</label>
+                        <select id="guild-select" onchange="loadChannels(this.value)">
+                            <option value="">Загрузка...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="channel-select">Канал:</label>
+                        <select id="channel-select" disabled onchange="checkChannelSelection()">
+                            <option value="">Выберите сервер</option>
+                        </select>
+                    </div>
+
+                    <button class="btn" id="send-btn" onclick="sendEmbed()" disabled>
+                        📤 Отправить эмбед
+                    </button>
+
+                    <div class="status" id="status"></div>
+                </div>
+
+                <div class="preview-section">
+                    <h2>👁️ Предпросмотр</h2>
+                    <div class="discord-message">
+                        <div class="discord-avatar">W</div>
+                        <div class="discord-content">
+                            <div class="discord-username">Webhook</div>
+                            <div id="preview-container">
+                                <p style="color: #b5bac1; font-size: 13px;">Введите JSON код для предпросмотра</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-editor-container" id="code-editor-container">
+                <div class="code-editor-header">
+                    <h2>💻 Редактор кода</h2>
+                    <div class="code-editor-buttons">
+                        <button class="code-editor-toggle" onclick="toggleCodeEditor()">▼ Развернуть</button>
+                        <button class="code-editor-btn" onclick="copyCode()">📋 Скопировать</button>
+                        <button class="code-editor-btn" onclick="toggleFullscreen()">⛶ Полный экран</button>
+                    </div>
+                </div>
+                <div class="code-editor-content">
+                    <div class="code-editor-wrapper">
+                        <div class="line-numbers" id="line-numbers">1</div>
+                        <div class="syntax-highlight" id="syntax-highlight"></div>
+                        <textarea id="embed-code" placeholder='Вставьте JSON или выберите шаблон' oninput="updatePreview(); updateLineNumbers(); highlightSyntax(); checkChannelSelection();" onscroll="syncScroll()" onpaste="setTimeout(() => { updatePreview(); updateLineNumbers(); highlightSyntax(); }, 10)"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Полноэкранный редактор -->
+    <div class="fullscreen-editor" id="fullscreen-editor">
+        <div class="code-editor-header">
+            <h2>💻 Редактор кода</h2>
+            <div class="code-editor-buttons">
+                <button class="code-editor-btn" onclick="copyCode()">📋 Скопировать</button>
+                <button class="code-editor-btn" onclick="toggleFullscreen()">✕ Закрыть</button>
+            </div>
+        </div>
+        <div class="code-editor-content">
+            <div class="code-editor-wrapper">
+                <div class="line-numbers" id="line-numbers-fullscreen">1</div>
+                <div class="syntax-highlight" id="syntax-highlight-fullscreen"></div>
+                <textarea id="embed-code-fullscreen" placeholder='Вставьте JSON или выберите шаблон' oninput="syncCode(true); updateLineNumbers(true); highlightSyntax(true)" onscroll="syncScroll(true)"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Инициализация после загрузки DOM
+        document.addEventListener('DOMContentLoaded', function() {
+            // Обработчик кнопки входа
+            document.getElementById('login-btn').addEventListener('click', login);
+            
+            // Обработчик Enter в поле пинкода
+            document.getElementById('pincode').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') login();
+            });
+            
+            // Проверяем авторизацию при загрузке
+            checkAuth();
+        });
+
+        async function checkAuth() {
+            try {
+                const r = await fetch('/api/check-auth');
+                const d = await r.json();
+                if (d.authenticated) {
+                    document.getElementById('login-form').style.display = 'none';
+                    document.getElementById('main-container').classList.add('active');
+                    loadGuilds();
+                    loadTemplates();
+                }
+            } catch (e) { }
+        }
+
+        async function login() {
+            console.log('Функция login() вызвана');
+            const pin = document.getElementById('pincode').value;
+            const errorDiv = document.getElementById('login-error');
+            
+            console.log('Введенный пинкод:', pin);
+            
+            if (!pin) {
+                errorDiv.textContent = '❌ Введите пинкод';
+                console.log('Пинкод пустой');
+                return;
+            }
+            
+            console.log('Отправка запроса на сервер...');
+            
+            try {
+                const r = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pincode: pin })
+                });
+                
+                console.log('Ответ сервера получен, статус:', r.status);
+                
+                const data = await r.json();
+                console.log('Данные ответа:', data);
+                
+                if (r.ok) {
+                    console.log('Успешный вход, показываем главный контейнер');
+                    document.getElementById('login-form').style.display = 'none';
+                    document.getElementById('main-container').classList.add('active');
+                    loadGuilds();
+                    loadTemplates();
+                } else {
+                    console.log('Ошибка авторизации:', data.error);
+                    errorDiv.textContent = '❌ ' + (data.error || 'Неверный пинкод');
+                }
+            } catch (e) {
+                console.error('Ошибка входа:', e);
+                errorDiv.textContent = '❌ Ошибка подключения к серверу';
+            }
+        }
+
+        async function logout() {
+            await fetch('/api/logout', { method: 'POST' });
+            location.reload();
+        }
+
+        async function loadTemplates() {
+            try {
+                const r = await fetch('/api/templates');
+                const t = await r.json();
+                
+                // Загружаем в основную панель
+                const div = document.getElementById('templates-list');
+                // Загружаем в боковую панель
+                const sidebarDiv = document.getElementById('sidebar-templates-list');
+                
+                if (t.length === 0) {
+                    const emptyMsg = '<p style="text-align: center; color: #999;">Нет шаблонов</p>';
+                    div.innerHTML = emptyMsg;
+                    sidebarDiv.innerHTML = '<p style="text-align: center; color: #9ca3af;">Нет шаблонов</p>';
+                    return;
+                }
+                
+                const templateHTML = t.map(x => `
+                    <div class="template-item" onclick="selectTemplate(${x.id})">
+                        <span>${x.name}</span>
+                        <div class="template-actions">
+                            <button class="btn-delete" onclick="deleteTemplate(${x.id}, event)">🗑️</button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                div.innerHTML = templateHTML;
+                
+                // Для боковой панели - упрощенная версия
+                const sidebarHTML = t.map(x => `
+                    <div class="template-item" onclick="selectTemplate(${x.id}); closeSidebar();">
+                        <span>${x.name}</span>
+                    </div>
+                `).join('');
+                sidebarDiv.innerHTML = sidebarHTML;
+            } catch (e) { }
+        }
+
+        async function selectTemplate(id) {
+            try {
+                const r = await fetch(`/api/templates/${id}`);
+                const t = await r.json();
+                document.getElementById('embed-code').value = t.content;
+                document.getElementById('embed-code-fullscreen').value = t.content;
+                document.querySelectorAll('.template-item').forEach(el => el.classList.remove('selected'));
+                event.target.closest('.template-item').classList.add('selected');
+                showStatus('success', `✅ Шаблон "${t.name}" загружен`);
+                checkChannelSelection();
+                updatePreview();
+                updateLineNumbers(false);
+                updateLineNumbers(true);
+                highlightSyntax(false);
+                highlightSyntax(true);
+            } catch (e) {
+                showStatus('error', '❌ Ошибка');
+            }
+        }
+
+        async function saveTemplate() {
+            const name = document.getElementById('template-name').value.trim();
+            const content = document.getElementById('embed-code').value.trim();
+            if (!name) { showStatus('error', '❌ Введите название'); return; }
+            if (!content) { showStatus('error', '❌ Введите код'); return; }
+            try {
+                const r = await fetch('/api/templates', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, content })
+                });
+                if (r.ok) {
+                    showStatus('success', `✅ Шаблон "${name}" сохранён`);
+                    document.getElementById('template-name').value = '';
+                    loadTemplates();
+                } else {
+                    const d = await r.json();
+                    showStatus('error', `❌ ${d.error}`);
+                }
+            } catch (e) {
+                showStatus('error', '❌ Ошибка');
+            }
+        }
+
+        async function deleteTemplate(id, e) {
+            e.stopPropagation();
+            if (!confirm('Удалить?')) return;
+            try {
+                await fetch(`/api/templates/${id}`, { method: 'DELETE' });
+                showStatus('success', '✅ Удалено');
+                loadTemplates();
+            } catch (e) {
+                showStatus('error', '❌ Ошибка');
+            }
+        }
+
+        async function loadGuilds() {
+            try {
+                const r = await fetch('/api/guilds');
+                const g = await r.json();
+                const s = document.getElementById('guild-select');
+                s.innerHTML = '<option value="">-- Выберите сервер --</option>';
+                g.forEach(x => {
+                    const o = document.createElement('option');
+                    o.value = x.id;
+                    o.textContent = x.name;
+                    s.appendChild(o);
+                });
+            } catch (e) { }
+        }
+
+        async function loadChannels(gid) {
+            const s = document.getElementById('channel-select');
+            if (!gid) {
+                s.innerHTML = '<option value="">Выберите сервер</option>';
+                s.disabled = true;
+                document.getElementById('send-btn').disabled = true;
+                return;
+            }
+            try {
+                const r = await fetch(`/api/guilds/${gid}/channels`);
+                const c = await r.json();
+                s.innerHTML = '<option value="">-- Выберите канал --</option>';
+                s.disabled = false;
+                c.forEach(x => {
+                    const o = document.createElement('option');
+                    o.value = x.id;
+                    o.textContent = `# ${x.name}`;
+                    s.appendChild(o);
+                });
+            } catch (e) { }
+        }
+
+        function checkChannelSelection() {
+            const cid = document.getElementById('channel-select').value;
+            const code = document.getElementById('embed-code').value.trim();
+            document.getElementById('send-btn').disabled = !cid || !code;
+        }
+
+        async function sendEmbed() {
+            const gid = document.getElementById('guild-select').value;
+            const cid = document.getElementById('channel-select').value;
+            const data = document.getElementById('embed-code').value.trim();
+            if (!gid || !cid || !data) {
+                showStatus('error', '❌ Заполните все поля');
+                return;
+            }
+            const btn = document.getElementById('send-btn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Отправка...';
+            try {
+                const r = await fetch('/api/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ guildId: gid, channelId: cid, embedData: data })
+                });
+                const res = await r.json();
+                if (r.ok) {
+                    showStatus('success', `✅ Отправлено в #${res.channelName}!`);
+                } else {
+                    showStatus('error', `❌ ${res.error}`);
+                }
+            } catch (e) {
+                showStatus('error', `❌ ${e.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '📤 Отправить эмбед';
+            }
+        }
+
+        function showStatus(type, msg) {
+            const s = document.getElementById('status');
+            s.className = `status ${type}`;
+            s.textContent = msg;
+        }
+
+        document.getElementById('pincode').addEventListener('keypress', e => {
+            if (e.key === 'Enter') login();
+        });
+
+        // Функции для боковой панели
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+
+        function switchTab(tab) {
+            // Переключение табов
+            document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.sidebar-content').forEach(c => c.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(`${tab}-content`).classList.add('active');
+            
+            // Загрузка данных для таба
+            if (tab === 'orders') loadTranscripts('orders');
+            if (tab === 'boosts') loadTranscripts('boosts');
+            if (tab === 'embeds') loadTemplates();
+        }
+
+        async function loadTranscripts(type) {
+            try {
+                const r = await fetch(`/api/transcripts/${type}`);
+                const files = await r.json();
+                const listId = `${type}-list`;
+                const div = document.getElementById(listId);
+                
+                if (files.length === 0) {
+                    div.innerHTML = '<p style="text-align: center; color: #9ca3af;">Нет транскриптов</p>';
+                    return;
+                }
+                
+                div.innerHTML = files.map(f => `
+                    <div class="transcript-item" onclick="viewTranscript('${type}', '${f.name}')">
+                        <div class="name">${f.displayName}</div>
+                        <div class="date">${f.date}</div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                console.error('Ошибка загрузки транскриптов:', e);
+            }
+        }
+
+        async function viewTranscript(type, filename) {
+            try {
+                const r = await fetch(`/api/transcripts/${type}/${encodeURIComponent(filename)}`);
+                const data = await r.json();
+                
+                document.getElementById('transcript-title').textContent = data.name;
+                document.getElementById('transcript-content').textContent = data.content;
+                document.getElementById('transcript-viewer').classList.add('active');
+                document.getElementById('overlay').classList.add('active');
+            } catch (e) {
+                console.error('Ошибка загрузки транскрипта:', e);
+            }
+        }
+
+        function closeTranscriptViewer() {
+            document.getElementById('transcript-viewer').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+
+        function formatContent(text) {
+            return text
+                .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/~~(.*?)~~/g, '<del>$1</del>')
+                .replace(/`(.*?)`/g, '<code style="background: #1e1f22; padding: 2px 4px; border-radius: 3px; font-size: 0.875em;">$1</code>')
+                .replace(/##\s+(.*?)(<br>|$)/g, '<div class="discord-embed-title">$1</div>')
+                .replace(/>\s+(.*?)(<br>|$)/g, '<div style="border-left: 4px solid #4e5058; padding-left: 12px; margin: 4px 0; color: #b5bac1;">$1</div>')
+                .replace(/<:(.*?):\d+>/g, '[$1]')
+                .replace(/<a:(.*?):\d+>/g, '[a:$1]')
+                .replace(/<t:(\d+):(F|R|f|D|d|T|t)>/g, (match, timestamp, format) => {
+                    const date = new Date(parseInt(timestamp) * 1000);
+                    return '<span style="background: #5865f21a; padding: 0 2px; border-radius: 3px;">' + 
+                           date.toLocaleString('ru-RU') + '</span>';
+                });
+        }
+
+        function renderV2Components(components) {
+            let html = '<div class="discord-embed" style="border-left-color: #5865f2; padding: 0;">';
+            
+            if (!components || !Array.isArray(components)) return '';
+            
+            // Проходим по всем контейнерам
+            components.forEach(container => {
+                if (container.type === 17 && container.components) {
+                    // Обрабатываем компоненты внутри контейнера
+                    container.components.forEach(comp => {
+                        // Тип 12 - Медиа галерея
+                        if (comp.type === 12 && comp.items && comp.items.length > 0) {
+                            comp.items.forEach(item => {
+                                if (item.media && item.media.url) {
+                                    html += '<img class="discord-embed-image" src="' + item.media.url + '" style="width: 100%; border-radius: 8px; margin-bottom: 8px;">';
+                                }
+                            });
+                        }
+                        
+                        // Тип 14 - Разделитель
+                        else if (comp.type === 14) {
+                            const spacing = comp.spacing || 1;
+                            if (comp.divider) {
+                                html += '<div style="height: 1px; background: #3f4147; margin: ' + (spacing * 8) + 'px 16px;"></div>';
+                            } else {
+                                html += '<div style="height: ' + (spacing * 8) + 'px;"></div>';
+                            }
+                        }
+                        
+                        // Тип 9 - Секция с аксессуаром
+                        else if (comp.type === 9) {
+                            html += '<div style="display: flex; gap: 12px; padding: 12px 16px; align-items: center;">';
+                            
+                            // Текстовый контент
+                            html += '<div style="flex: 1;">';
+                            if (comp.components && comp.components.length > 0) {
+                                comp.components.forEach(subComp => {
+                                    if (subComp.type === 10 && subComp.content) {
+                                        html += '<div class="discord-embed-description" style="margin: 0;">' + formatContent(subComp.content) + '</div>';
+                                    }
+                                });
+                            }
+                            html += '</div>';
+                            
+                            // Аксессуар (изображение справа)
+                            if (comp.accessory && comp.accessory.type === 11 && comp.accessory.media && comp.accessory.media.url) {
+                                html += '<img src="' + comp.accessory.media.url + '" style="width: 100px; height: 100px; border-radius: 8px; object-fit: cover; flex-shrink: 0;">';
+                            }
+                            
+                            html += '</div>';
+                        }
+                        
+                        // Тип 10 - Простой текст
+                        else if (comp.type === 10 && comp.content) {
+                            html += '<div style="padding: 12px 16px;">';
+                            html += '<div class="discord-embed-description" style="margin: 0;">' + formatContent(comp.content) + '</div>';
+                            html += '</div>';
+                        }
+                    });
+                }
+            });
+            
+            html += '</div>';
+            return html;
+        }
+
+        function renderContainer(containerData) {
+            let html = '<div class="discord-embed" style="border-left-color: #5865f2;">';
+            
+            // Обрабатываем каждый элемент контейнера
+            Object.keys(containerData).forEach(key => {
+                const element = containerData[key];
+                
+                // Изображение
+                if (element.image || element.url) {
+                    const imgUrl = element.image?.url || element.url;
+                    if (imgUrl) {
+                        html += '<img class="discord-embed-image" src="' + imgUrl + '">';
+                    }
+                }
+                
+                // Разделитель
+                if (element.divider) {
+                    const spacing = element.spacing || 1;
+                    html += '<div style="height: ' + (spacing * 8) + 'px;"></div>';
+                }
+                
+                // Текстовый контент
+                if (element.content) {
+                    html += '<div class="discord-embed-description">' + formatContent(element.content) + '</div>';
+                }
+                
+                // Футер
+                if (element.footer) {
+                    html += '<div class="discord-embed-footer">';
+                    html += '<span>' + element.footer + '</span>';
+                    html += '</div>';
+                }
+            });
+            
+            html += '</div>';
+            return html;
+        }
+
+        function updatePreview() {
+            const code = document.getElementById('embed-code').value.trim();
+            const container = document.getElementById('preview-container');
+            
+            if (!code) {
+                container.innerHTML = '<p style="color: #b5bac1; font-size: 13px;">Введите JSON код для предпросмотра</p>';
+                return;
+            }
+            
+            try {
+                const data = JSON.parse(code);
+                let html = '';
+                
+                // 1. Discord Components V2 (с полем components)
+                if (data.components && Array.isArray(data.components) && data.components.length > 0) {
+                    html = renderV2Components(data.components);
+                }
+                // 2. Формат с container (кастомные компоненты)
+                else if (Object.values(data).some(val => val && val.container)) {
+                    Object.keys(data).forEach(key => {
+                        if (data[key].container) {
+                            html += renderContainer(data[key].container);
+                        }
+                    });
+                } 
+                // 3. Прямой container в корне
+                else if (data.container) {
+                    html = renderContainer(data.container);
+                }
+                // 4. Стандартные Discord embeds
+                else {
+                    const embeds = data.embeds || (Array.isArray(data) ? data : null);
+                    
+                    if (embeds && embeds.length > 0) {
+                        embeds.forEach(embed => {
+                            const color = embed.color ? `#${embed.color.toString(16).padStart(6, '0')}` : '#5865f2';
+                            html += '<div class="discord-embed" style="border-left-color: ' + color + '">';
+                            
+                            // Author
+                            if (embed.author) {
+                                html += '<div class="discord-embed-author">';
+                                if (embed.author.icon_url) {
+                                    html += '<img class="discord-embed-author-icon" src="' + embed.author.icon_url + '">';
+                                }
+                                html += '<span class="discord-embed-author-name">' + (embed.author.name || '') + '</span>';
+                                html += '</div>';
+                            }
+                            
+                            // Thumbnail
+                            if (embed.thumbnail && embed.thumbnail.url) {
+                                html += '<img class="discord-embed-thumbnail" src="' + embed.thumbnail.url + '">';
+                            }
+                            
+                            // Title
+                            if (embed.title) {
+                                html += '<div class="discord-embed-title">' + embed.title + '</div>';
+                            }
+                            
+                            // Description
+                            if (embed.description) {
+                                html += '<div class="discord-embed-description">' + embed.description.replace(/\n/g, '<br>') + '</div>';
+                            }
+                            
+                            // Fields
+                            if (embed.fields && embed.fields.length > 0) {
+                                html += '<div class="discord-embed-fields">';
+                                embed.fields.forEach(field => {
+                                    const inlineClass = field.inline ? 'inline' : '';
+                                    html += '<div class="discord-embed-field ' + inlineClass + '">';
+                                    html += '<div class="discord-embed-field-name">' + (field.name || '') + '</div>';
+                                    html += '<div class="discord-embed-field-value">' + (field.value || '').replace(/\n/g, '<br>') + '</div>';
+                                    html += '</div>';
+                                });
+                                html += '</div>';
+                            }
+                            
+                            // Image
+                            if (embed.image && embed.image.url) {
+                                html += '<img class="discord-embed-image" src="' + embed.image.url + '">';
+                            }
+                            
+                            // Footer
+                            if (embed.footer) {
+                                html += '<div class="discord-embed-footer">';
+                                if (embed.footer.icon_url) {
+                                    html += '<img class="discord-embed-footer-icon" src="' + embed.footer.icon_url + '">';
+                                }
+                                html += '<span>' + (embed.footer.text || '') + '</span>';
+                                html += '</div>';
+                            }
+                            
+                            html += '</div>';
+                        });
+                    } else if (data.content || data.username) {
+                        // Если это простое сообщение вебхука без embeds
+                        if (data.content) {
+                            html = '<div style="color: #dbdee1; margin-bottom: 8px;">' + data.content.replace(/\n/g, '<br>') + '</div>';
+                        }
+                    }
+                }
+                
+                // Если есть content (текст сообщения) и embeds
+                if (data.content && html) {
+                    container.innerHTML = '<div style="color: #dbdee1; margin-bottom: 8px;">' + data.content.replace(/\n/g, '<br>') + '</div>' + html;
+                } else if (html) {
+                    container.innerHTML = html;
+                } else {
+                    // Показываем информацию о типе JSON
+                    container.innerHTML = '<div style="color: #f0b232; font-size: 13px; padding: 12px; background: #2b2d31; border-radius: 8px; border-left: 3px solid #f0b232;">' +
+                        '<strong>⚠️ Неизвестный формат</strong><br><br>' +
+                        'Поддерживаемые форматы:<br>' +
+                        '• <code style="background: #1e1f22; padding: 2px 6px; border-radius: 3px;">embeds</code> - Discord webhook embeds<br>' +
+                        '• <code style="background: #1e1f22; padding: 2px 6px; border-radius: 3px;">container</code> - компоненты Discord<br>' +
+                        '• <code style="background: #1e1f22; padding: 2px 6px; border-radius: 3px;">content</code> - текст сообщения<br><br>' +
+                        'JSON валиден, но не содержит этих полей.' +
+                        '</div>';
+                }
+                
+            } catch (e) {
+                container.innerHTML = '<p style="color: #f87171; font-size: 13px;">❌ Ошибка JSON: ' + e.message + '</p>';
+            }
+        }
+
+        function copyCode() {
+            const code = document.getElementById('fullscreen-editor').classList.contains('active') 
+                ? document.getElementById('embed-code-fullscreen').value 
+                : document.getElementById('embed-code').value;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                showStatus('success', '✅ Код скопирован');
+            }).catch(() => {
+                showStatus('error', '❌ Ошибка копирования');
+            });
+        }
+
+        function toggleFullscreen() {
+            const fullscreen = document.getElementById('fullscreen-editor');
+            const isActive = fullscreen.classList.contains('active');
+            
+            if (isActive) {
+                // Закрываем полноэкранный режим
+                fullscreen.classList.remove('active');
+                // Синхронизируем код обратно
+                document.getElementById('embed-code').value = document.getElementById('embed-code-fullscreen').value;
+                updatePreview();
+                updateLineNumbers(false);
+                highlightSyntax(false);
+            } else {
+                // Открываем полноэкранный режим
+                document.getElementById('embed-code-fullscreen').value = document.getElementById('embed-code').value;
+                fullscreen.classList.add('active');
+                updateLineNumbers(true);
+                highlightSyntax(true);
+            }
+        }
+
+        function syncCode(fromFullscreen) {
+            if (fromFullscreen) {
+                document.getElementById('embed-code').value = document.getElementById('embed-code-fullscreen').value;
+                updatePreview();
+                updateLineNumbers(false);
+                highlightSyntax(false);
+            } else {
+                document.getElementById('embed-code-fullscreen').value = document.getElementById('embed-code').value;
+                updateLineNumbers(true);
+                highlightSyntax(true);
+            }
+        }
+
+        function updateLineNumbers(isFullscreen = false) {
+            const textarea = isFullscreen 
+                ? document.getElementById('embed-code-fullscreen')
+                : document.getElementById('embed-code');
+            const lineNumbersDiv = isFullscreen
+                ? document.getElementById('line-numbers-fullscreen')
+                : document.getElementById('line-numbers');
+            
+            const lines = textarea.value.split('\n').length;
+            let lineNumbers = '';
+            for (let i = 1; i <= lines; i++) {
+                lineNumbers += i + '\n';
+            }
+            lineNumbersDiv.textContent = lineNumbers;
+        }
+
+        function syncScroll(isFullscreen = false) {
+            const textarea = isFullscreen 
+                ? document.getElementById('embed-code-fullscreen')
+                : document.getElementById('embed-code');
+            const lineNumbers = isFullscreen
+                ? document.getElementById('line-numbers-fullscreen')
+                : document.getElementById('line-numbers');
+            const highlight = isFullscreen
+                ? document.getElementById('syntax-highlight-fullscreen')
+                : document.getElementById('syntax-highlight');
+            
+            lineNumbers.scrollTop = textarea.scrollTop;
+            if (highlight) {
+                highlight.style.transform = `translateY(-${textarea.scrollTop}px)`;
+            }
+        }
+
+        function highlightSyntax(isFullscreen = false) {
+            const textarea = isFullscreen 
+                ? document.getElementById('embed-code-fullscreen')
+                : document.getElementById('embed-code');
+            const highlight = isFullscreen
+                ? document.getElementById('syntax-highlight-fullscreen')
+                : document.getElementById('syntax-highlight');
+            
+            let code = textarea.value;
+            
+            // Подсветка JSON синтаксиса
+            code = code
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                // Ключи
+                .replace(/"([^"]+)"(\s*:)/g, '<span class="json-key">"$1"</span>$2')
+                // Строки (не ключи)
+                .replace(/:\s*"([^"]*)"/g, ': <span class="json-string">"$1"</span>')
+                // Числа
+                .replace(/:\s*(-?\d+\.?\d*)/g, ': <span class="json-number">$1</span>')
+                // Boolean
+                .replace(/:\s*(true|false)/g, ': <span class="json-boolean">$1</span>')
+                // Null
+                .replace(/:\s*(null)/g, ': <span class="json-null">$1</span>')
+                // Скобки
+                .replace(/([{}[\]])/g, '<span class="json-bracket">$1</span>')
+                // Запятые
+                .replace(/,/g, '<span class="json-comma">,</span>');
+            
+            highlight.innerHTML = code;
+        }
+
+        function toggleCodeEditor() {
+            const container = document.getElementById('code-editor-container');
+            const btn = event.target;
+            
+            if (container.classList.contains('expanded')) {
+                container.classList.remove('expanded');
+                btn.textContent = '▼ Развернуть';
+            } else {
+                container.classList.add('expanded');
+                btn.textContent = '▲ Свернуть';
+                // Обновляем предпросмотр после разворачивания
+                setTimeout(() => {
+                    updatePreview();
+                    updateLineNumbers();
+                    highlightSyntax();
+                }, 100);
+            }
+        }
+    </script>
+</body>
+</html>

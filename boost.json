@@ -1,0 +1,73 @@
+{
+  "content": "",
+  "tts": false,
+  "embeds": [],
+  "components": [
+    {
+      "id": 900001,
+      "type": 17,
+      "components": [
+        {
+          "id": 900002,
+          "type": 12,
+          "items": [
+            {
+              "id": 900003,
+              "media": {
+                "url": "https://media.discordapp.net/attachments/1462804318611836928/1464231634961305653/Frame_6560_1.png?ex=6974b779&is=697365f9&hm=7f9adb77297dccfeaa076fa8001926110aefec83aaac9553c709be9deb9b494a&=&format=webp&quality=lossless&width=1867&height=741"
+              }
+            }
+          ]
+        },
+        {
+          "id": 900004,
+          "type": 14,
+          "divider": true,
+          "spacing": 1
+        },
+        {
+          "id": 900005,
+          "type": 10,
+          "content": "## <:Frame_6551:1463821985522909337>・Заказ бустов\nСоздать заявку на покупку бустов для вашего сервера можно ниже!\n* `Примечание:` Укажите **точное количество бустов** и **ссылку на сервер**, чтобы мы могли обработать заказ быстрее.\n"
+        },
+        {
+          "id": 900006,
+          "type": 14,
+          "divider": true,
+          "spacing": 2
+        },
+        {
+          "id": 900007,
+          "type": 9,
+          "components": [
+            {
+              "id": 900008,
+              "type": 10,
+              "content": "Нажми кнопку справа →"
+            }
+          ],
+          "accessory": {
+            "id": 900009,
+            "type": 2,
+            "style": 2,
+            "label": "Заказать бусты",
+            "emoji": {
+              "id": "1462806359060906152",
+              "name": "6011exclamationviolett",
+              "animated": true
+            },
+            "action_set_id": "create_boost_ticket"
+          }
+        }
+      ]
+    }
+  ],
+  "actions": {
+    "create_boost_ticket": {
+      "actions": []
+    }
+  },
+  "flags": 32768,
+  "username": "ORJUS STUDIO",
+  "avatar_url": "https://cdn.discordapp.com/attachments/1462804318611836928/1462909582471991348/image_62.png?ex=696fe838&is=696e96b8&hm=46b385a78d0861f1ebf5da382671a175d16b4753b8881370a7b8c9efdcd8d06a&"
+}

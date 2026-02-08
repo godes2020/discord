@@ -1,0 +1,87 @@
+{
+  "embeds": [],
+  "components": [
+    {
+      "id": 881308393,
+      "type": 17,
+      "components": [
+        {
+          "id": 947443466,
+          "type": 12,
+          "items": [
+            {
+              "id": 84775104,
+              "media": {
+                "url": "https://media.discordapp.net/attachments/1462804318611836928/1463617215948652806/Frame_6548_10.png?ex=69732400&is=6971d280&hm=b656d894d90a685082f73131e8a706c470afa3eafac884213503e39d01f82d74&=&format=webp&quality=lossless&width=1872&height=744"
+              }
+            }
+          ]
+        },
+        {
+          "id": 391942019,
+          "type": 14,
+          "divider": true,
+          "spacing": 2
+        },
+        {
+          "id": 38781601,
+          "type": 10,
+          "content": "## [<:image1:1462898121511014490>]・Проверка\n<:vverh:1462900845426249821>   **Вы находитесь в техническом канале проверки.**\n<:seredina:1462900739260027047>   Для продолжения использования сервера нажмите на кнопку\n<:seredina:1462900739260027047>   ниже, чтобы __подтвердить аккаунт__ и получить роль участник.\n<:vniz:1462900782524534885>   После успешной проверки вам откроются все основные каналы студии.​\n"
+        },
+        {
+          "id": 983015138,
+          "type": 14,
+          "divider": true,
+          "spacing": 2
+        },
+        {
+          "id": 982198139,
+          "type": 9,
+          "components": [
+            {
+              "id": 498848131,
+              "type": 10,
+              "content": "Нажми кнопку справа →"
+            }
+          ],
+          "accessory": {
+            "id": 998401198,
+            "type": 2,
+            "style": 2,
+            "label": "Проверка",
+            "emoji": {
+              "id": "1462806359060906152",
+              "name": "6011exclamationviolett",
+              "animated": true
+            },
+            "action_set_id": "357954935"
+          }
+        }
+      ]
+    }
+  ],
+  "actions": {
+    "357954935": {
+      "actions": [
+        {
+          "type": 3,
+          "id": 102342094,
+          "target_id": "1462726357732556936",
+          "public": false,
+          "allow_role_mentions": false,
+          "disable_default_response": true
+        },
+        {
+          "type": 1,
+          "id": 322731832,
+          "text": "```✅ Аккаунт успешно подтверждён!```",
+          "public": false,
+          "allow_role_mentions": false
+        }
+      ]
+    }
+  },
+  "flags": 32768,
+  "username": "ORJUS STUDIO",
+  "avatar_url": "https://cdn.discordapp.com/attachments/1462804318611836928/1462909582471991348/image_62.png?ex=696fe838&is=696e96b8&hm=46b385a78d0861f1ebf5da382671a175d16b4753b8881370a7b8c9efdcd8d06a&"
+}

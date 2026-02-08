@@ -1,0 +1,34 @@
+{
+  "type": "boost_ticket_close_dm",
+  "description": "ЛС-сообщение при закрытии буст-тикета с причиной",
+  "container": {
+    "components": [
+      {
+        "type": "media_gallery",
+        "items": [
+          {
+            "url": "https://media.discordapp.net/attachments/1462804318611836928/1464225475952906414/Frame_6560.png?format=webp&quality=lossless"
+          }
+        ]
+      },
+      {
+        "type": "separator",
+        "divider": true,
+        "spacing": 1
+      },
+      {
+        "type": "text_display",
+        "content": "## Сведения о заказе:\n[🟢] **Открыл:** {{customer.username}}\n[🔴] **Закрыл:** {{closer.username}}\n\n[📋] **Тема заказа**\n> Заказ бустов\n\n[📖] **Количество:**\n> {{ticketData.boostCount}}\n\n[📝] **Куда покупали:**\n> {{ticketData.serverLink}}\n\n[⏱️] **Время открытия**\n> <t:{{ticketData.openTime}}:F>\n\n[🔒] **Время закрытия**\n> <t:{{closeTime}}:F>\n\n[📝] **Причина закрытия**\n> {{reason}}"
+      },
+      {
+        "type": "separator",
+        "divider": true,
+        "spacing": 2
+      },
+      {
+        "type": "text_display",
+        "content": "*Тикет был автоматически заархивирован системой.*"
+      }
+    ]
+  }
+}

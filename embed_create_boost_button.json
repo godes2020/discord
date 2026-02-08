@@ -1,0 +1,46 @@
+{
+  "type": "create_boost_ticket_button",
+  "description": "Первое сообщение с кнопкой для создания буст-тикета (/ticketboostfirstmessage)",
+  "container": {
+    "components": [
+      {
+        "type": "media_gallery",
+        "items": [
+          {
+            "url": "https://media.discordapp.net/attachments/1462804318611836928/1464231634961305653/Frame_6560_1.png?format=webp&quality=lossless&width=1867&height=741"
+          }
+        ]
+      },
+      {
+        "type": "separator",
+        "divider": true,
+        "spacing": 1
+      },
+      {
+        "type": "text_display",
+        "content": "## <:Frame_6551:1463821985522909337>・Заказ бустов\nСоздать заявку на покупку бустов для вашего сервера можно ниже!\n* `Примечание:` Укажите **точное количество бустов** и **ссылку на сервер**, чтобы мы могли обработать заказ быстрее.\n"
+      },
+      {
+        "type": "separator",
+        "divider": true,
+        "spacing": 2
+      },
+      {
+        "type": "section",
+        "text": "Нажми кнопку справа →",
+        "accessory": {
+          "type": "button",
+          "customId": "create_boost_ticket",
+          "label": "Заказать бусты",
+          "style": "Secondary",
+          "emoji": {
+            "id": "1462806359060906152",
+            "name": "6011exclamationviolett",
+            "animated": true
+          }
+        }
+      }
+    ]
+  },
+  "flags": 32768
+}

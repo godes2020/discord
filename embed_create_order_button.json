@@ -1,0 +1,46 @@
+{
+  "type": "create_order_ticket_button",
+  "description": "Первое сообщение с кнопкой для создания тикета заказа (/ticketstartmessage)",
+  "container": {
+    "components": [
+      {
+        "type": "media_gallery",
+        "items": [
+          {
+            "url": "https://media.discordapp.net/attachments/1462804318611836928/1464225475952906414/Frame_6560.png?format=webp&quality=lossless&width=1867&height=741"
+          }
+        ]
+      },
+      {
+        "type": "separator",
+        "spacing": 1,
+        "divider": true
+      },
+      {
+        "type": "text_display",
+        "content": "## <:Frame_6552:1464225922235367559> ・Создать заказ\nСоздать заявку на выполнение заказа нашей студией можно ниже!\n* `Примечание:` Не забудьте указать все в подробностях, чтобы наши исполнители все поняли.\n"
+      },
+      {
+        "type": "separator",
+        "spacing": 2,
+        "divider": true
+      },
+      {
+        "type": "section",
+        "text": "Нажми кнопку справа →",
+        "accessory": {
+          "type": "button",
+          "customId": "create_ticket",
+          "label": "Создать заказ",
+          "style": "Secondary",
+          "emoji": {
+            "id": "1462806359060906152",
+            "name": "6011exclamationviolett",
+            "animated": true
+          }
+        }
+      }
+    ]
+  },
+  "flags": 32768
+}
